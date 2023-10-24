@@ -27,9 +27,17 @@ def index(request):
     )
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def post_list(request):
     if request.method == 'GET':
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+    if request.method == 'POST':
+        print(request.data)
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
