@@ -1,11 +1,12 @@
 from http.client import HTTPResponse
 
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 
 from blog.models import Post
-from blog.serializers import PostSerializer
+from blog.serializers import PostSerializer, UserSerializer
 
 
 # Create your views here.
@@ -41,3 +42,10 @@ def post_list(request):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def get_user_id(request):
+    user = request.user
+    serializer = UserSerializer(instance=user)
+    return Response(serializer.data)
