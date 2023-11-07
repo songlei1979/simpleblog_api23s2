@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
+from blog.views import Logout
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("blog/", include("blog.urls")),
-    path("auth/", obtain_auth_token)
+    path("auth/", obtain_auth_token),
+    path("auth/logout/", Logout.as_view())
 ]

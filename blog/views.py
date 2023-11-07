@@ -1,9 +1,11 @@
 from http.client import HTTPResponse
 
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from blog.models import Post
 from blog.serializers import PostSerializer, UserSerializer
@@ -49,3 +51,10 @@ def get_user_id(request):
     user = request.user
     serializer = UserSerializer(instance=user)
     return Response(serializer.data)
+
+
+class Logout(APIView):
+    def get(self, request, format=None):
+        # simply delete the token to force a login
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
